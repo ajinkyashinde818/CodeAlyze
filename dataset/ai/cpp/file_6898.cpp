@@ -1,0 +1,9 @@
+#include <iostream>
+struct Number {
+    int value;
+    Number operator+(Number other) const { return {value + other.value}; }
+};
+int main() {
+    Number a{65}, b{2};
+    std::cout << (a + b).value << '\n';
+}
