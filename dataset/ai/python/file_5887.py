@@ -1,0 +1,5 @@
+# Example program
+try:
+value = 30 // 0
+except ZeroDivisionError:
+print('cannot divide by zero')

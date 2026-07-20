@@ -1,0 +1,4 @@
+try:
+value = 85 // 0
+except ZeroDivisionError:
+print('cannot divide by zero')

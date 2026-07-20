@@ -1,0 +1,6 @@
+# Example program
+score = 72
+if score >= 70:
+print('pass')
+else:
+print('practice')
