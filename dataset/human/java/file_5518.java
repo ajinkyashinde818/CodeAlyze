@@ -1,0 +1,18 @@
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String args[]){
+
+		Scanner cin = new Scanner(System.in);
+
+		int target = cin.nextInt();
+		cin.close();
+		String result ="ABC";
+		if(target>=1200){
+			result = "ARC";
+		}
+		System.out.println(result);
+
+	}
+}

@@ -1,0 +1,25 @@
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+		solve(scanner);
+		scanner.close();
+	}
+	
+	public static void solve(Scanner scanner) {
+		int n = scanner.nextInt();
+		long[] array = new long[n];
+		long max = 0;
+		for (int i = 0; i < array.length; i++) {
+			array[i] = scanner.nextLong();
+			max += array[i];
+		}
+		long min = Long.MAX_VALUE;
+		for (int i = 0; i < array.length-1; i++) {
+			max -= array[i]*2;
+			min = Math.min(Math.abs(max), min);
+		}
+		System.out.println(min);
+	}
+}

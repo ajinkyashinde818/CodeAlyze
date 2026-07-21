@@ -1,0 +1,30 @@
+import java.util.Scanner;
+
+/**
+ *
+ * @author ena000078
+ */
+public class Main {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        long cards[] = new long[N+1];
+        
+        cards[0] = 0;
+        for (int i=1;i<=N;i++){
+            cards[i] = cards[i-1] + sc.nextLong();
+        }
+        
+        long minn = Math.abs(cards[N] - 2*cards[1]);
+        for(int i=2;i<N;i++){
+            minn = Math.min(minn, Math.abs(cards[N]-2*cards[i]));
+        }
+
+        System.out.println(minn);
+    }
+}

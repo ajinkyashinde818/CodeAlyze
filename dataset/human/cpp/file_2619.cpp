@@ -1,0 +1,19 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+  int n, minus = 0, minn = numeric_limits<int>::max(); cin >> n;
+
+  long long ans = 0;
+  for(int i=0; i<n; ++i){
+    int a; cin >> a;
+
+    if(a < 0) ++minus;
+    ans += abs(a);
+    minn = min(minn, abs(a));
+  }
+
+  if(minus & 1) ans -= minn*2;
+
+  cout << ans << endl;
+}

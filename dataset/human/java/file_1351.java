@@ -1,0 +1,53 @@
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Main {
+	public static void main(String args[]) throws IOException {
+		@SuppressWarnings("resource")
+		Scanner cin = new Scanner(System.in);
+		ArrayList<String> inLines = new ArrayList<String>();
+		for (; cin.hasNext();) {
+			inLines.add(cin.nextLine());
+		}
+		String[] strArr = inLines.get(0).split(" ");
+		int N = Integer.parseInt(strArr[0]);
+		int M = Integer.parseInt(strArr[1]);
+		ArrayList<String> A = new ArrayList<String>();
+		for (int i = 0; i < N; i++)
+			A.add(inLines.get(i + 1));
+		ArrayList<String> B = new ArrayList<String>();
+		for (int i = 0; i < M; i++)
+			B.add(inLines.get(N + i + 1));
+
+		// System.out.println("N=" + N + " M=" + M);
+		// System.out.println();
+		// for (String s : A)
+		// System.out.println(s);
+		// System.out.println();
+		// for (String s : B)
+		// System.out.println(s);
+
+		boolean found = false;
+		for (int Ay = 0; !found && Ay <= N - M; Ay++) {
+			for (int Ax = 0; !found && Ax <= N - M; Ax++) {
+				found = true;
+				for (int By = 0; found && By < M; By++) {
+					for (int Bx = 0; Bx < M; Bx++) {
+						char ca = A.get(Ay + By).charAt(Ax + Bx);
+						char cb = B.get(By).charAt(Bx);
+						if (ca != cb) {
+							found = false;
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		if (found)
+			System.out.println("Yes");
+		else
+			System.out.println("No");
+	}
+}

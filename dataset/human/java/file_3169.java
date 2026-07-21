@@ -1,0 +1,13 @@
+import java.util.Scanner;
+public class Main {
+	public static void main(String[] args){
+		Scanner in = new java.util.Scanner(System.in);
+		
+		String N = in.nextLine();
+		if(N.contains("9")) {
+			System.out.println("Yes");
+		}else {
+			System.out.println("No");
+		}
+	}
+}

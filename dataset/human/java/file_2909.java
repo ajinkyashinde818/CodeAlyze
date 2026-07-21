@@ -1,0 +1,43 @@
+import java.util.Scanner;
+
+/**
+ *
+ * @author ena000078
+ */
+public class Main {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        int M = sc.nextInt();
+        boolean shipB[] = new boolean[N+1];
+        boolean shipN[] = new boolean[N+1];
+        
+        for(int i=0;i<M;i++){
+            int a = sc.nextInt();
+            int b = sc.nextInt();
+            if (a==1){
+                shipB[b] = true;
+            }else if(b==N){
+                shipN[a] = true;
+            }
+        }
+        
+        
+        String pos = "IMPOSSIBLE";
+        for(int i=2;i<N;i++){
+            if (shipB[i]){
+                if(shipN[i]){
+                    pos = "POSSIBLE";
+                    break;
+                }
+            }
+        }
+        System.out.println(pos);
+    }
+    
+}

@@ -1,0 +1,28 @@
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int n, m;
+		HashMap<Integer, LinkedList<Integer>> islands = new HashMap<>();
+		boolean result;
+
+		n = sc.nextInt();
+		for(int i = 1; i <= n; i++) {
+			islands.put(i, new LinkedList<>());
+		}
+		m = sc.nextInt();
+		for(int i = 0; i < m; i++) {
+			islands.get(sc.nextInt()).add(sc.nextInt());
+		}
+
+		result = islands.get(1).stream().anyMatch(i -> islands.get(i).contains(n));
+		if( result ) {
+			System.out.println("POSSIBLE");
+		} else {
+			System.out.println("IMPOSSIBLE");
+		}
+	}
+}

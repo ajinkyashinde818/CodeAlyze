@@ -1,0 +1,52 @@
+import java.util.*;
+
+class Main {
+  public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
+
+    int D = sc.nextInt();
+    int G = sc.nextInt();
+    int[] p = new int[D];
+    int[] c = new int[D];
+
+    for (int i = 0; i < D; i++) {
+      p[i] = sc.nextInt();
+      c[i] = sc.nextInt();
+    }
+
+    System.out.println(solve(D, G, p, c));
+  }
+
+  private static int solve(int D, int G, int[] p, int[] c) {
+    int ans = Integer.MAX_VALUE;
+
+    // i桁の値が1なら問題iを完全に解く
+    for (int mask = 0; mask < (1 << D); mask++) {
+      int score = 0, num = 0, rest_max = -1;
+      // maskに対応したスコアを算出する
+      for (int i = 0; i < D; i++) {
+        if ((mask >> i & 1) == 1) {
+          score += 100 * (i + 1) * p[i] + c[i];
+          num += p[i];
+        } else {
+          // 中途半端に解く問題 (完全に解く問題以外で最大の配点となる問題)
+          rest_max = i;
+        }
+      }
+
+      if (score < G) {
+        int s1 = 100 * (rest_max + 1);
+        int need = (G - score + s1 - 1) / s1;
+        if (need >= p[rest_max]) {
+          // このmaskと中途半端に解く問題の組合せでは総合スコアをG以上にできない
+          continue;
+        }
+
+        num += need;
+      }
+      ans = Math.min(ans, num);
+    }
+
+    return ans;
+  }
+}

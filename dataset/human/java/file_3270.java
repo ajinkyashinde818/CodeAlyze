@@ -1,0 +1,23 @@
+import java.util.Scanner;
+import static java.lang.System.out;
+public class Main{
+   public static void main(String []args){
+      Scanner sc = new Scanner(System.in);
+      int N = sc.nextInt();
+      boolean result = false;
+      int ns = N%10;//1
+      int nt = (N-ns)/10;
+      if(ns == 9){
+         result = true;
+      }else{
+         if(nt==9){
+            result = true;
+         }
+      }
+      if(result == true){
+         out.println("Yes");
+      }else{
+         out.println("No");
+      }
+   }
+}

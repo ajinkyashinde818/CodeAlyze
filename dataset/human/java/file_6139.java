@@ -1,0 +1,27 @@
+import java.util.Scanner;
+
+public class Main {
+
+    private static Scanner scan = new Scanner(System.in);
+
+    public static void main(String[] args) {
+	int K = Integer.parseInt(scan.next());
+	int S = Integer.parseInt(scan.next());
+
+	int count = 0;
+	for (int i = 0; i <= K; i++) {
+	    int XY = S - i;
+	    if(XY < 0) break;
+	    if(XY <= 2 * K) {
+		for (int j = 0; j <= K; j++) {
+		    int X = XY - j;
+		    if(X < 0) break;
+		    if(X <= K) count++;
+		}
+	    }
+	}
+
+	System.out.println(count);
+	scan.close();
+    }
+}

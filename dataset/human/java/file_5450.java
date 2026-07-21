@@ -1,0 +1,19 @@
+import java.util.Scanner;
+
+/**
+ * https://abc053.contest.atcoder.jp/submissions/1102786
+ */
+public class Main {
+	 
+	public static void main(String[] args) {
+		
+		Scanner sc = new Scanner(System.in);
+		int rate = sc.nextInt();
+		sc.close();
+		
+		String ans = rate>=1200 ? "ARC" : "ABC";
+		System.out.println(ans);
+ 
+	}
+ 
+}

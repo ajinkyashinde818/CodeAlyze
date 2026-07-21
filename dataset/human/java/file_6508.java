@@ -1,0 +1,1 @@
+public class Main {public static void main(String[] args) {java.util.Scanner c=new java.util.Scanner(System.in);int k=c.nextInt(),s=c.nextInt();System.out.println(java.util.stream.IntStream.range(0,k+1).map(x->s-x+1-Math.min(s-x+1,Math.max(0,(s-x-k)*2))).sum());}}

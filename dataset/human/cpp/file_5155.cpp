@@ -1,0 +1,60 @@
+#include <algorithm>
+#include <cassert>
+#include <cmath>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <stack>
+#include <vector>
+
+static const int IINF = 1 << 30;
+static const long long LINF = 1LL << 60;
+static const long long MOD = 1.0e+9 + 7;
+
+template <typename T> std::vector<T> vectors(std::size_t n, T val) {
+  return std::vector<T>(n, val);
+}
+
+template <typename T, typename... Args>
+auto vectors(std::size_t n, Args... args) {
+  return std::vector<decltype(vectors<T>(args...))>(n, vectors<T>(args...));
+}
+
+template <class T> inline bool chmin(T &a, const T &b) {
+  return (a > b) ? a = b, true : false;
+}
+
+template <class T> inline bool chmax(T &a, const T &b) {
+  return (a < b) ? a = b, true : false;
+}
+
+template <class T> inline void chadd(T &a, const T &b) {
+  a += b, a %= MOD;
+  // TODO minus case
+}
+
+template <class T>
+std::ostream &operator<<(std::ostream &stream, const std::vector<T> &vec) {
+  for (auto val : vec) {
+    if (std::is_fundamental<T>::value)
+      stream << " " << val;
+    else
+      stream << std::endl << val;
+  }
+  return stream;
+}
+
+int main() {
+  int N, R;
+  std::cin >> N >> R;
+  int res = 0;
+  if (N >= 10) {
+    res = R;
+  } else {
+    // R = X - (100 * (10 - N));
+    res = R + (100 * (10 - N));
+  }
+  std::cout << res << std::endl;
+
+  return 0;
+}

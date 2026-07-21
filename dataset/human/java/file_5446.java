@@ -1,0 +1,21 @@
+import java.io.*;
+
+public class Main {
+
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+
+        Long value = Long.parseLong(reader.readLine());
+        if (value < 1200L)
+            System.out.println("ABC");
+        else
+            System.out.println("ARC");
+//        PrintWriter writer = new PrintWriter(System.out);
+//
+//        writer.close();
+
+
+    }
+}

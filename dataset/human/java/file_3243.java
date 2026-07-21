@@ -1,0 +1,15 @@
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		boolean f = false;
+		while (n > 0) {
+			if (n % 10 == 9)
+				f = true;
+			n /= 10;
+		}
+		System.out.println(f ? "Yes" : "No");
+	}
+}

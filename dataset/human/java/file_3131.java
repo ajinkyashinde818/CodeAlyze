@@ -1,0 +1,18 @@
+import java.util.Scanner;
+
+/**
+ * https://beta.atcoder.jp/contests/abc073/tasks/abc073_a
+ */
+public class Main {
+
+	public static void main(String[] args) {
+		
+		Scanner sc = new Scanner(System.in);
+		String s = sc.next();
+		sc.close();
+		
+		System.out.println(s.contains("9") ? "Yes" : "No");
+
+	}
+
+}

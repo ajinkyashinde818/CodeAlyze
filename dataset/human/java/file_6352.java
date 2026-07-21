@@ -1,0 +1,26 @@
+import java.util.Scanner;
+
+/**
+ * Created by sonetsuyoshi on 2016/07/31.
+ */
+public class Main {
+
+    static public void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        long k = sc.nextInt();
+        long s = sc.nextInt();
+
+        long count = 0;
+
+        for(long x = 0; x <= k; x++) {
+            long s1 = s - x;
+            if(s1 < 0) break;
+            else if(s1 >= 0 && s1 <= k) {
+                count += s1 + 1;
+            } else if(k < s1 && s1 <= 2 * k) {
+                count += 2 * k - s1 + 1;
+            }
+        }
+        System.out.println(count);
+    }
+}

@@ -1,0 +1,42 @@
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
+
+/**
+ * http://abc068.contest.atcoder.jp/tasks/arc079_a
+ */
+public class Main {
+
+	public static void main(String[] args) {
+		
+		Scanner sc = new Scanner(System.in);
+		final int N = sc.nextInt();
+		final int M = sc.nextInt();
+		Map<Integer, Set<Integer>> m = new HashMap<>();
+		for(int i=0; i<M; i++){
+			int a = sc.nextInt();
+			int b = sc.nextInt();
+			Set<Integer> set = m.get(a);
+			if(set==null) set = new HashSet<Integer>();
+			set.add(b);
+			m.put(a, set);
+		}
+		sc.close();
+		
+		boolean ans = false;
+		if(m.containsKey(1)){
+			for(int next: m.get(1)){
+				if( m.containsKey(next) && m.get(next).contains(N)){
+					ans = true;
+					break;
+				}
+			}
+		}
+		
+		System.out.println( ans ? "POSSIBLE" : "IMPOSSIBLE");
+
+	}
+
+}

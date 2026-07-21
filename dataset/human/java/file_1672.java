@@ -1,0 +1,1 @@
+import java.util.*;public class Main{static long mod=(long)1e9+7;public static void main(String[] args){Scanner in=new Scanner(System.in);int n=in.nextInt();int[] freq=new int[26];char[] s=in.next().toCharArray();for(char c:s)freq[c-'a']++;long ans=1L;for(int i:freq){ans*=(i+1);ans%=mod;}ans--;ans=(ans+mod)%mod;System.out.println(ans);}}

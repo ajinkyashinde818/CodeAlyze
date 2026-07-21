@@ -1,0 +1,16 @@
+import java.util.Scanner;
+
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        char [] b = in.next().toCharArray();
+        if (b [0] == '9' || b [1] == '9' ){
+            System.out.println("Yes");
+        }
+        else {
+            System.out.println("No");
+        }
+    }
+}

@@ -1,0 +1,30 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+    static Scanner in = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int n = in.nextInt(), m = in.nextInt();
+        ArrayList<Integer> list = new ArrayList<>();
+        boolean[] f = new boolean[n + 1];
+        for (int i = 0; i < m; i++) {
+            int a = in.nextInt(), b = in.nextInt();
+            if (a == 1) {
+                f[b] = true;
+            }
+            if (b == n) {
+                list.add(a);
+            }
+        }
+
+        for (int i : list) {
+            if (f[i]) {
+                System.out.println("POSSIBLE");
+                return;
+            }
+
+        }
+        System.out.println("IMPOSSIBLE");
+    }
+}

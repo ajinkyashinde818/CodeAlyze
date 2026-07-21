@@ -1,0 +1,41 @@
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) throws NumberFormatException, IOException {
+
+		Scanner sc = new Scanner(System.in);
+
+		int N = sc.nextInt();
+		int M = sc.nextInt();
+		int a;
+		int b;
+		HashSet<Integer> hashFirstTo = new HashSet<Integer>();
+		HashSet<Integer> hashSecondFrom = new HashSet<Integer>();
+		boolean possible = false;
+		for (int i=0; i<M; i++){
+			a = sc.nextInt();
+			b = sc.nextInt();
+			if (a == 1){
+				hashFirstTo.add(b);
+			} else if (b == N){
+				hashSecondFrom.add(a);
+			}
+		}
+		for (int firstTo:hashFirstTo){
+			if (hashSecondFrom.contains(firstTo)){
+				possible = true;
+				break;
+			}
+		}
+
+		if (possible == true){
+			System.out.println("POSSIBLE");
+		} else {
+			System.out.println("IMPOSSIBLE");
+		}
+	}
+
+}

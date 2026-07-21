@@ -1,0 +1,21 @@
+import sys
+
+input = sys.stdin.readline
+
+def main():
+  N,M = map(int,input().split())
+  m = set()
+  for _ in range(M):
+    a,b = map(int,input().split())
+    if a < b:
+      m.add((a,b))
+    else:
+      m.add((b,a))
+  for i in range(2,N):
+    if (1,i) in m and (i,N) in m:
+      print('POSSIBLE')
+      break
+  else:
+    print('IMPOSSIBLE')
+
+main()

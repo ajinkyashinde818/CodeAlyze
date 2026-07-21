@@ -1,0 +1,32 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+        String[] inputs = input.readLine().split(" ");
+        int K = Integer.parseInt(inputs[0]);
+        int S = Integer.parseInt(inputs[1]);
+
+        int[] xPlusY = new int[2 * K + 1];
+        for (int x = 0; x <= K; x++) {
+            for (int y = 0; y <= K; y++) {
+                xPlusY[x + y] += 1;
+            }
+        }
+
+        int count = 0;
+        for (int z = 0; z <= K; z++) {
+            int sMinusZ = S - z;
+            
+            if (sMinusZ <= 2 * K && sMinusZ >= 0) {
+                count += xPlusY[sMinusZ];
+            }
+
+        }
+
+        System.out.println(count);
+    }
+}

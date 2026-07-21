@@ -1,0 +1,53 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import static java.lang.Integer.parseInt;
+
+/**
+ * ACB068
+ * C - Cat Snuke and a Voyage
+ */
+public class Main {
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String line;
+		String[] words;
+
+		line = br.readLine();
+
+		int N, M;
+		N = parseInt(line.substring(0, line.indexOf(' ')));
+		M = parseInt(line.substring(line.indexOf(' ') + 1));
+
+		Map<Integer, Set<Integer>> G = new HashMap<>();
+
+		G.put(1, new HashSet<>());
+		G.put(N, new HashSet<>());
+
+		for (int i = 0; i < M; i++) {
+			line = br.readLine();
+			int a, b;
+			a = parseInt(line.substring(0, line.indexOf(' ')));
+			b = parseInt(line.substring(line.indexOf(' ') + 1));
+			G.putIfAbsent(a, new HashSet<>());
+			G.putIfAbsent(b, new HashSet<>());
+			G.get(a).add(b);
+			G.get(b).add(a);
+		}
+
+		for (int i : G.get(1)) {
+			if (G.get(N).contains(i)) {
+				System.out.println("POSSIBLE");
+				return;
+			}
+		}
+
+		System.out.println("IMPOSSIBLE");
+	}
+}

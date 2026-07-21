@@ -1,0 +1,13 @@
+def main():
+    n = input()
+    a_list = [int(i) for i in input().split()]
+    sumv = sum(a_list)
+    minv, tmp = 10**9 * 2, 0
+    for a in a_list[:-1]:
+        tmp += a
+        if abs(sumv-2*tmp) < minv: minv = abs(sumv-2*tmp)
+    print(minv)
+
+
+if __name__ == "__main__":
+    main()

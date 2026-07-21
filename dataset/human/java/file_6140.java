@@ -1,0 +1,17 @@
+import java.util.Scanner;
+ public class Main {
+public static void main(String[] args) {
+Scanner sc =  new Scanner(System.in);
+	int k=sc.nextInt();
+	int s=sc.nextInt();
+	int ans=0,i,j;
+	for(i=0;i<=k;i++){
+		for(j=0;j<=k;j++){
+			if(i+j<= s && s-(i + j)<= k){
+			ans++;
+	}
+	}
+	}
+	System.out.println(ans);
+}
+}

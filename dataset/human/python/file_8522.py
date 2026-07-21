@@ -1,0 +1,29 @@
+import sys
+import os
+import math
+
+ii = lambda: int(sys.stdin.buffer.readline().rstrip())
+il = lambda: list(map(int, sys.stdin.buffer.readline().split()))
+iln = lambda n: [int(sys.stdin.buffer.readline().rstrip()) for _ in range(n)]
+
+iss = lambda: sys.stdin.buffer.readline().decode().rstrip()
+isn = lambda n: [sys.stdin.buffer.readline().decode().rstrip() for _ in range(n)]
+
+
+def main():
+    if os.getenv("LOCAL"):
+        sys.stdin = open("input.txt", "r")
+
+    K, N = il()
+    A = il()
+    A.sort()
+    ret = max(A) - min(A)
+
+    for n in range(N - 1):
+        ret = min(ret, A[n] + (K - A[n + 1]))
+
+    print(ret)
+
+
+if __name__ == '__main__':
+    main()

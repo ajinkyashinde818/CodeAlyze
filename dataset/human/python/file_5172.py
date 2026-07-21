@@ -1,0 +1,28 @@
+import sys
+
+def possible():
+    print("POSSIBLE")
+    sys.exit()
+
+def main():
+    N, M = map(int, input().split())
+    hashdict = dict()
+    for i in range(1009):
+        hashdict[i] = list()
+    alist = list()
+    for i in range(M):
+        a, b = map(int, input().split())
+        if a == 1:
+            temp = b % 1009
+            hashdict[temp].append(b)
+        if b == N:
+            alist.append(a)
+
+    for start in alist:
+        temp = start % 1009
+        if start in hashdict[temp]:
+            possible()
+    print("IMPOSSIBLE")
+
+if __name__ == "__main__":
+    main()

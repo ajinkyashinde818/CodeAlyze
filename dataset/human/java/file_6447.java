@@ -1,0 +1,12 @@
+import java.util.*;
+public class Main{
+	static Scanner s = new Scanner(System.in);
+	public static void main(String[] args){
+		int k=s.nextInt(),SUM=s.nextInt(),sum=0;
+		for(int a=0;a<=k;a++)if(a<=SUM)
+				for(int b=0;b<=k;b++)
+					if(SUM-a-b>=0 && SUM-a-b<=k)
+						sum++;
+		System.out.println(sum);
+	}
+}

@@ -1,0 +1,155 @@
+import java.math.BigDecimal;
+import java.util.*;
+
+public class Main {
+
+    Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        new Main().run();
+    }
+
+    void run() {
+
+        long s = sc.nextLong();
+
+        if (s==1) {
+            System.out.println(0);
+            return;
+        }
+
+        Primes primes = new Primes();
+//        System.out.println(primes.primes(s));
+
+        long ans = 0;
+
+        for (Long t: primes.primes(s).keySet()) {
+            long val = primes.primes(s).get(t);
+            long sum = 0;
+            long cnt = 0;
+            while (0<val) {
+                cnt++;
+                val -= cnt;
+                if (val<0) break;
+                sum++;
+            }
+//            System.out.println(sum);
+            ans += sum;
+        }
+
+        System.out.println(ans);
+
+//        System.out.println(primes.primes(s).values());
+
+    }
+    class Primes {
+
+        /**
+         * 素因数分解
+         * @param n
+         * @return map key: prime, value: count
+         */
+        Map<Long, Long> primes(long n) {
+            List<Long> list = new ArrayList<>();
+            Map<Long, Long> map = new HashMap<>();
+
+            while (n >= 4 && n % 2 == 0) {
+                list.add(2L);
+                n /= 2;
+            }
+            long d = 3;
+            long q = n / d;
+            while (q >= d) {
+                if (n % d == 0) {
+                    list.add(d);
+                    n = q;
+                } else {
+                    d += 2;
+                }
+                q = n / d;
+            }
+            list.add(n);
+
+            for (long t: list) {
+                if (map.containsKey(t)) {
+                    map.put(t, map.get(t) + 1);
+                } else {
+                    map.put(t, 1L);
+                }
+            }
+            return map;
+        }
+
+        /**
+         * n以下の素因数列挙
+         * @param n
+         * @return
+         */
+        List<Integer> eratosthenes(int n) {
+            boolean[] flag = new boolean[n+1];
+            int sqrt = (int)Math.sqrt(n);
+
+            for (int i=2; i<=sqrt; i++) {
+                if (!flag[i]) {
+                    for (int j=i*i; j<=n; j+=i) {
+                        flag[j] = true;
+                    }
+                }
+            }
+
+            List<Integer> list = new ArrayList<>();
+            for (int i=2; i<=n; i++) {
+                if (!flag[i]) list.add(i);
+            }
+            return list;
+
+        }
+
+        /**
+         * n以下の素因数列挙
+         * @param n
+         * @return
+         */
+        List<Integer> atkin(int n) {
+            boolean[] flag = new boolean[n+1];
+            int sqrt = (int)Math.sqrt(n);
+
+            flag[0] = flag[1] = false;
+            flag[2] = flag[3] = true;
+
+            for (int i=1; i<=sqrt; i++) {
+                for (int j=1; j<=sqrt; j++) {
+                    int num = (4 * i * i) + (j * j);
+                    if (num <= n && (num % 12 == 1 || num % 12 == 5)) {
+                        flag[num] = !flag[num];
+                    }
+                    num = (3 * i * i) + (j * j);
+                    if (num <= n && (num % 12 == 7)) {
+                        flag[num] = !flag[num];
+                    }
+                    num = (3 * i * i) - (j * j);
+                    if (i > j && num <= n && (num % 12 == 11)) {
+                        flag[num] = !flag[num];
+                    }
+                }
+            }
+
+            for (int i=5; i<=sqrt; i++) {
+                if (flag[i]) {
+                    int x = i * i;
+                    for (int j=x; j<=n; j+=x) {
+                        flag[j] = false;
+                    }
+                }
+            }
+
+            List<Integer> list = new ArrayList<>();
+            for (int i=0; i<=n; i++) {
+                if (flag[i]) list.add(i);
+            }
+            return list;
+
+        }
+
+    }
+}

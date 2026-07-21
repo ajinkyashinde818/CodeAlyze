@@ -1,0 +1,11 @@
+import java.util.Scanner;
+import java.io.IOException;
+
+class Main{
+  public static void main(String... args)throws IOException{
+    Scanner sc = new Scanner(System.in);
+    int num = sc.nextInt();
+    if(num /10 == 9 || num %10 == 9) System.out.println("Yes");
+    else System.out.println("No");
+  }
+}

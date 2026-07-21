@@ -1,0 +1,24 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        try (Scanner in = new Scanner(System.in)) {
+            // while (true)
+            solve(in);
+        }
+    }
+
+    private static void solve(Scanner in) {
+        int K = in.nextInt(), S = in.nextInt();
+        int count = 0;
+        for (int x = 0; x < K + 1; x++) {
+            for (int y = 0; y < K + 1; y++) {
+                int z = S - (x + y);
+                if (z >= 0 && z <= K) {
+                    count++;
+                }
+            }
+        }
+        System.out.println(count);
+    }
+}
