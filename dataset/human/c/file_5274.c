@@ -1,0 +1,74 @@
+#include<stdio.h>
+#define MAX 100000
+#define NOT -1
+
+
+struct Node {int p, l, r;};
+struct Node T[MAX];
+int n,H[MAX],D[MAX];
+
+void setDepth(int u,int d){
+  if(u==NOT)return;
+  D[u]=d;
+  setDepth(T[u].l,d+1);
+  setDepth(T[u].r,d+1);
+}
+int setHeight(int u){
+  int h1=0,h2=0;
+  if(T[u].l!=NOT)h1=setHeight(T[u].l)+1;
+  if(T[u].r!=NOT)h2=setHeight(T[u].r)+1;
+  
+  if(h1>h2){return H[u]=h1;}
+  else{ return H[u]=h2;}
+}
+
+int getSibling(int u){
+  if(T[u].p==NOT)return NOT;
+  if(T[T[u].p].l!=u && T[T[u].p].l !=NOT)return T[T[u].p].l;
+  if(T[T[u].p].r!=u && T[T[u].p].r !=NOT)return T[T[u].p].r;
+  return NOT;
+}
+
+void print(int u){
+    int deg=0;
+  printf("node %d: ",u);  
+  printf("parent = %d, ",T[u].p);
+  printf("sibling = %d, ",getSibling(u));
+
+  if(T[u].l !=NOT)deg++;
+  if(T[u].r !=NOT)deg++;
+  printf("degree = %d, ",deg);
+  printf("depth = %d, ",D[u]);
+  printf("height = %d, ",H[u]);
+
+  if(T[u].p==NOT) printf("root\n");//
+  else if(T[u].l == NOT && T[u].r==NOT) printf("leaf\n");//
+  else printf("internal node\n");//
+    
+
+}
+
+int main(){
+  int i,v,l,r,root=0;
+  
+  scanf("%d",&n);
+
+  for(i=0;i<n;i++)T[i].p=NOT;
+
+  for(i=0;i<n;i++){
+    scanf("%d %d %d",&v,&l,&r);
+    T[v].l=l;
+    T[v].r=r;
+    if(l!=NOT)T[l].p=v;
+    if(r!=NOT)T[r].p=v;
+
+  }
+  for(i=0;i<n;i++)if(T[i].p==NOT)root=i;
+
+  setDepth(root,0);
+  setHeight(root);
+
+  for(i=0;i<n;i++)print(i);
+  
+  return 0;
+}

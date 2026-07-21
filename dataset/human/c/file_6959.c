@@ -1,0 +1,43 @@
+#include<stdio.h>
+int main(){
+  int i,j,n[300],m[300],l,a,b,c;
+  for(l=0;l>-1;l++){
+    scanf("%d %d",&n[l],&m[l]);
+    if(n[l]==0&&m[l]==0){
+      break;
+    }
+  }
+  for(a=0;a<l;a++){
+    for(j=0;j<n[a];j++){
+      for(i=0;i<m[a];i++){
+	b=j%2;
+	c=i%2;
+	if(b==0){
+	  if(c==0){
+	    printf("#");
+	  }
+	  else{
+	    if(c==1){
+	    printf(".");
+	  }
+	  }
+	}
+	else{
+	  if(b==1){
+	    if(c==0){
+	      printf(".");
+	    }
+	    else{
+	      if(c==1){
+		printf("#");
+	      }
+	    }
+	  }
+	}
+      }
+      printf("\n");
+    }
+    printf("\n");
+  }
+  return(0);
+}

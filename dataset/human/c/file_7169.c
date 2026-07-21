@@ -1,0 +1,45 @@
+#include<stdio.h>
+int main(void){
+    int h,w,i,j,k,l;
+    while(1){
+        scanf("%d%d",&h,&w);
+        if(h==0&&h==0){
+            break;
+        }
+        for(i=0;i<h/2;i++){
+            for(j=0;j<w/2;j++){
+            printf("#.");
+            }
+            if(w%2==1){
+                printf("#\n");
+            }
+            else{
+                printf("\n");
+            }
+             for(k=0;k<w/2;k++){
+            printf(".#");
+            }
+            if(w%2==1){
+                printf(".\n");
+            }
+            else{
+                printf("\n");
+            }
+        }
+        if(h%2==1){
+                for(l=0;l<w/2;l++){
+            printf("#.");
+            }
+            if(w%2==1){
+                printf("#\n\n");
+            }
+            else{
+                printf("\n\n");
+            }
+        }
+        else{
+            printf("\n");
+        }
+    }
+    return 0;
+}

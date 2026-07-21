@@ -1,0 +1,30 @@
+#include<stdio.h>
+int main(void)
+{
+    int N,M,i,j,k,a;
+    //N : ??????????????°???M : ?????????????????°
+    //num[1010] : ???????????´??°???k : ??????????????????1.2.3.4...
+    int num[1010];
+    scanf("%d %d",&N,&M);
+    for(i = 1;i <= N;i++){
+        scanf("%d",&num[i]);
+    }
+    for(k = 1;k <= M;k++){
+        for(i = 1;i <= N;i++){
+            if(1 <= i && i <=N - 1){
+                if(num[i] % k > num[i + 1] % k){
+                    a = num[i];
+                    num[i] = num[i + 1];
+                    num[i + 1] = a;
+                }
+
+            }
+        }
+    }
+    for(i = 1;i <= N;i++){
+        printf("%d\n",num[i]);
+    }
+
+
+    return 0;
+}
