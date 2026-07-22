@@ -1,3 +1,7 @@
+// --- Configuration ---
+// Set this to your Render backend URL for production, or keep empty for local development
+const API_BASE_URL = "https://codealyze.onrender.com";
+
 document.addEventListener("DOMContentLoaded", () => {
     const codeInput = document.getElementById("code-input");
     const fileInput = document.getElementById("file-input");
@@ -104,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 body.language = selectedLang;
             }
 
-            const resp = await fetch("/api/analyze", {
+            const resp = await fetch(`${API_BASE_URL}/api/analyze`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),

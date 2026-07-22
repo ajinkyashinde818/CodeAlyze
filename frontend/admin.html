@@ -245,12 +245,14 @@
     </main>
 
     <script>
+        const API_BASE_URL = "https://codealyze.onrender.com";
+
         async function loadStats() {
             const container = document.getElementById("stats-container");
             container.innerHTML = `<div class="empty-state"><p>Loading...</p></div>`;
 
             try {
-                const resp = await fetch("/api/admin/stats");
+                const resp = await fetch(`${API_BASE_URL}/api/admin/stats`);
                 if (!resp.ok) throw new Error("Failed to load");
                 const data = await resp.json();
 
@@ -361,7 +363,7 @@
 
         async function exportReport(format) {
             try {
-                const url = `/api/admin/stats/export?format=${format}`;
+                const url = `${API_BASE_URL}/api/admin/stats/export?format=${format}`;
                 if (format === 'json') {
                     const resp = await fetch(url);
                     if (!resp.ok) throw new Error('Export failed');
