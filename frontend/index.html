@@ -34,6 +34,16 @@
             </div>
 
             <div class="tab-content active" id="tab-paste">
+                <div class="language-selector">
+                    <label for="lang-select">Language:</label>
+                    <select id="lang-select">
+                        <option value="auto">Auto-detect</option>
+                        <option value="C">C</option>
+                        <option value="C++">C++</option>
+                        <option value="Java">Java</option>
+                        <option value="Python">Python</option>
+                    </select>
+                </div>
                 <textarea id="code-input" class="code-editor" placeholder="Paste your source code here..." spellcheck="false"></textarea>
                 <div class="input-footer">
                     <span id="line-count" class="line-count">0 lines</span>

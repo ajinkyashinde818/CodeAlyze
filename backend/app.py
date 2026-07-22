@@ -2,8 +2,8 @@ import os
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 
-from .routes import api
-from .utils import init_db
+from routes import api
+from utils import init_db
 
 def create_app():
     app = Flask(__name__, static_folder=None)
@@ -35,7 +35,9 @@ def create_app():
 
     return app
 
+
+app = create_app()
+
 if __name__ == "__main__":
-    app = create_app()
     app.run(debug=True, port=5000)
 

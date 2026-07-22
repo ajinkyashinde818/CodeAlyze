@@ -1,3 +1,5 @@
+import csv
+import io
 import os
 import sqlite3
 import re
@@ -142,4 +144,31 @@ def get_analytics() -> Dict:
         "daily_stats": daily,
         "confidence_distribution": conf_dist,
     }
+
+
+def export_analytics_csv() -> str:
+    """Export all analyses records as a CSV string."""
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("SELECT id, timestamp, language, prediction, confidence, code_length FROM analyses ORDER BY id DESC")
+    rows = c.fetchall()
+    conn.close()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["ID", "Timestamp", "Language", "Prediction", "Confidence (%)", "Code Length"])
+    for row in rows:
+        writer.writerow(row)
+    return output.getvalue()
+
+
+def export_analytics_json() -> List[Dict]:
+    """Export all analyses records as a list of dicts."""
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("SELECT id, timestamp, language, prediction, confidence, code_length FROM analyses ORDER BY id DESC")
+    columns = ["id", "timestamp", "language", "prediction", "confidence", "code_length"]
+    rows = [dict(zip(columns, row)) for row in c.fetchall()]
+    conn.close()
+    return rows
 

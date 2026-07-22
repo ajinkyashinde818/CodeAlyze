@@ -96,10 +96,18 @@ document.addEventListener("DOMContentLoaded", () => {
         analyzeBtn.textContent = "Analyzing...";
 
         try {
+            const langSelect = document.getElementById("lang-select");
+            const selectedLang = langSelect ? langSelect.value : "auto";
+
+            const body = { code };
+            if (selectedLang !== "auto") {
+                body.language = selectedLang;
+            }
+
             const resp = await fetch("/api/analyze", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ code }),
+                body: JSON.stringify(body),
             });
 
             if (!resp.ok) {

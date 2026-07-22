@@ -2,8 +2,8 @@ import os
 import uuid
 from flask import Blueprint, request, jsonify, current_app
 
-from .predictor import predict, analyze_features
-from .utils import detect_language, detect_language_from_code, is_valid_code, record_analysis, get_analytics
+from predictor import predict, analyze_features
+from utils import detect_language, detect_language_from_code, is_valid_code, record_analysis, get_analytics, export_analytics_csv, export_analytics_json
 
 api = Blueprint("api", __name__)
 
@@ -29,9 +29,14 @@ def analyze():
         return jsonify({"error": "Empty or invalid code"}), 400
 
     filename = data.get("filename", "source.txt")
-    language = detect_language(filename)
-    if language == "Unknown":
-        language = detect_language_from_code(code)
+    language = data.get("language", None)
+    if language:
+        if language not in ("C", "C++", "Java", "Python"):
+            return jsonify({"error": f"Unsupported language: {language}"}), 400
+    else:
+        language = detect_language(filename)
+        if language == "Unknown":
+            language = detect_language_from_code(code)
 
     try:
         label, confidence, raw_score = predict(code)
@@ -107,6 +112,24 @@ def admin_stats():
     try:
         stats = get_analytics()
         return jsonify(stats), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@api.route("/admin/stats/export", methods=["GET"])
+def admin_stats_export():
+    fmt = request.args.get("format", "csv").lower()
+    try:
+        if fmt == "json":
+            data = export_analytics_json()
+            return jsonify(data), 200
+        else:
+            csv_data = export_analytics_csv()
+            return current_app.response_class(
+                csv_data,
+                mimetype="text/csv",
+                headers={"Content-Disposition": "attachment; filename=codealyze_analytics_export.csv"},
+            )
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
