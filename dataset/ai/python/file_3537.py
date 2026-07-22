@@ -1,2 +1,0 @@
-point = (14, 9)
-print(point[0], point[1])

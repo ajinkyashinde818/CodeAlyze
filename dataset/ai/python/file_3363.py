@@ -1,2 +1,0 @@
-data = [12, 18, 7]
-print(sum(data))

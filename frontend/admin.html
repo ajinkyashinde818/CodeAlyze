@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeAlyze — Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text2);
+        }
+
+        .stat-value.ai { color: var(--ai); }
+        .stat-value.human { color: var(--human); }
+        .stat-value.total { color: var(--primary); }
+        .stat-value.pct { color: var(--accent); }
+
+        .section-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+
+        .section-card h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .bar-label {
+            width: 80px;
+            font-size: 14px;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 24px;
+            background: var(--surface2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.6s ease;
+            display: flex;
+            align-items: center;
+            padding-left: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            min-width: fit-content;
+        }
+
+        .bar-fill.ai-fill { background: linear-gradient(90deg, var(--ai), #ff8787); }
+        .bar-fill.human-fill { background: linear-gradient(90deg, var(--human), #69db7c); }
+        .bar-fill.lang-fill { background: linear-gradient(90deg, var(--primary), var(--accent)); }
+
+        .bar-value {
+            width: 50px;
+            text-align: right;
+            font-size: 13px;
+            color: var(--text2);
+        }
+
+        .daily-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .daily-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 0;
+            font-size: 13px;
+        }
+
+        .daily-date {
+            width: 100px;
+            color: var(--text2);
+        }
+
+        .daily-bar {
+            flex: 1;
+            height: 16px;
+            background: var(--surface2);
+            border-radius: 3px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .daily-ai {
+            height: 100%;
+            background: var(--ai);
+        }
+
+        .daily-human {
+            height: 100%;
+            background: var(--human);
+        }
+
+        .daily-total {
+            width: 40px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .refresh-btn {
+            padding: 8px 20px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 16px;
+        }
+
+        .refresh-btn:hover {
+            background: var(--border);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text2);
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            opacity: 0.5;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <svg class="nav-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>
+            </svg>
+            <span>CodeAlyze</span>
+        </div>
+        <div class="nav-links">
+            <a href="/">Analyze</a>
+            <a href="/admin" class="active">Dashboard</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <header class="hero">
+            <h1>Admin Dashboard</h1>
+            <p>Real-time analytics for all code analyses.</p>
+        </header>
+
+        <button class="refresh-btn" onclick="loadStats()">⟳ Refresh</button>
+
+        <div id="stats-container">
+            <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+                <p>Loading analytics data...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        async function loadStats() {
+            const container = document.getElementById("stats-container");
+            container.innerHTML = `<div class="empty-state"><p>Loading...</p></div>`;
+
+            try {
+                const resp = await fetch("/api/admin/stats");
+                if (!resp.ok) throw new Error("Failed to load");
+                const data = await resp.json();
+
+                let html = "";
+
+                if (data.total_analyses === 0) {
+                    html = `<div class="empty-state"><p>No analyses recorded yet. Run some predictions first!</p></div>`;
+                    container.innerHTML = html;
+                    return;
+                }
+
+                // Stat cards
+                html += `<div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-value total">${data.total_analyses}</div>
+                        <div class="stat-label">Total Analyses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value ai">${data.ai_count}</div>
+                        <div class="stat-label">AI Generated</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value human">${data.human_count}</div>
+                        <div class="stat-label">Human Written</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value pct">${data.ai_percentage}%</div>
+                        <div class="stat-label">AI Percentage</div>
+                    </div>
+                </div>`;
+
+                // Language distribution
+                html += `<div class="section-card"><h2>Language Distribution</h2>`;
+                const langTotal = Object.values(data.language_distribution).reduce((a, b) => a + b, 0);
+                for (const [lang, count] of Object.entries(data.language_distribution)) {
+                    const pct = (count / langTotal * 100).toFixed(1);
+                    html += `<div class="bar-item">
+                        <span class="bar-label">${lang}</span>
+                        <div class="bar-track">
+                            <div class="bar-fill lang-fill" style="width: ${pct}%">${count}</div>
+                        </div>
+                        <span class="bar-value">${pct}%</span>
+                    </div>`;
+                }
+                html += `</div>`;
+
+                // AI vs Human
+                html += `<div class="section-card"><h2>AI vs Human</h2>`;
+                const aiPct = data.ai_percentage;
+                const humanPct = data.human_percentage;
+                html += `<div class="bar-item">
+                    <span class="bar-label">AI</span>
+                    <div class="bar-track">
+                        <div class="bar-fill ai-fill" style="width: ${aiPct}%">${data.ai_count}</div>
+                    </div>
+                    <span class="bar-value">${aiPct}%</span>
+                </div>
+                <div class="bar-item">
+                    <span class="bar-label">Human</span>
+                    <div class="bar-track">
+                        <div class="bar-fill human-fill" style="width: ${humanPct}%">${data.human_count}</div>
+                    </div>
+                    <span class="bar-value">${humanPct}%</span>
+                </div>`;
+                html += `</div>`;
+
+                // Confidence distribution
+                html += `<div class="section-card"><h2>Confidence Distribution</h2>`;
+                const confTotal = Object.values(data.confidence_distribution).reduce((a, b) => a + b, 0);
+                const confOrder = ["50-60%", "60-70%", "70-80%", "80-90%", "90-100%"];
+                for (const bucket of confOrder) {
+                    const count = data.confidence_distribution[bucket] || 0;
+                    const pct = (count / confTotal * 100).toFixed(1);
+                    html += `<div class="bar-item">
+                        <span class="bar-label">${bucket}</span>
+                        <div class="bar-track">
+                            <div class="bar-fill lang-fill" style="width: ${pct}%">${count}</div>
+                        </div>
+                        <span class="bar-value">${pct}%</span>
+                    </div>`;
+                }
+                html += `</div>`;
+
+                // Daily stats
+                if (data.daily_stats && data.daily_stats.length > 0) {
+                    html += `<div class="section-card"><h2>Daily Activity (Last 30 Days)</h2><div class="daily-list">`;
+                    const maxDaily = Math.max(...data.daily_stats.map(d => d.total), 1);
+                    for (const day of data.daily_stats) {
+                        const aiW = (day.ai / maxDaily * 100).toFixed(1);
+                        const humanW = (day.human / maxDaily * 100).toFixed(1);
+                        html += `<div class="daily-item">
+                            <span class="daily-date">${day.date}</span>
+                            <div class="daily-bar">
+                                <div class="daily-ai" style="width: ${aiW}%" title="AI: ${day.ai}"></div>
+                                <div class="daily-human" style="width: ${humanW}%" title="Human: ${day.human}"></div>
+                            </div>
+                            <span class="daily-total">${day.total}</span>
+                        </div>`;
+                    }
+                    html += `</div></div>`;
+                }
+
+                container.innerHTML = html;
+            } catch (err) {
+                container.innerHTML = `<div class="empty-state"><p>Error loading analytics: ${err.message}</p></div>`;
+            }
+        }
+
+        loadStats();
+    </script>
+</body>
+</html>
+

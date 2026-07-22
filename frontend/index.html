@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeAlyze — AI vs Human Code Detector</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <svg class="nav-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>
+            </svg>
+            <span>CodeAlyze</span>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="active">Analyze</a>
+            <a href="/admin">Dashboard</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <header class="hero">
+            <h1>Detect AI-Generated Code</h1>
+            <p>Paste source code or upload a file to determine if it was written by a human or AI.</p>
+        </header>
+
+        <div class="card input-card">
+            <div class="tabs">
+                <button class="tab active" data-tab="paste">Paste Code</button>
+                <button class="tab" data-tab="upload">Upload File</button>
+            </div>
+
+            <div class="tab-content active" id="tab-paste">
+                <textarea id="code-input" class="code-editor" placeholder="Paste your source code here..." spellcheck="false"></textarea>
+                <div class="input-footer">
+                    <span id="line-count" class="line-count">0 lines</span>
+                    <span id="char-count" class="char-count">0 chars</span>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-upload">
+                <div class="drop-zone" id="drop-zone">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                    </svg>
+                    <p class="drop-text">Drag & drop a source file here</p>
+                    <p class="drop-subtext">or click to browse</p>
+                    <input type="file" id="file-input" accept=".c,.cpp,.cc,.cxx,.h,.hpp,.java,.py" hidden>
+                    <span id="file-name" class="file-name"></span>
+                </div>
+                <div class="supported-formats">
+                    Supported: .c .cpp .cc .cxx .h .hpp .java .py
+                </div>
+            </div>
+
+            <button id="analyze-btn" class="btn btn-primary" disabled>
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+                </svg>
+                Analyze
+            </button>
+        </div>
+
+        <div id="loading" class="loading" hidden>
+            <div class="spinner"></div>
+            <p>Analyzing code...</p>
+        </div>
+
+        <div id="result" class="result-card" hidden>
+            <div class="result-header">
+                <div class="result-badge" id="result-badge">
+                    <span class="badge-icon" id="badge-icon"></span>
+                    <span id="result-label"></span>
+                </div>
+                <span class="result-language" id="result-language"></span>
+            </div>
+
+            <div class="confidence-section">
+                <div class="confidence-label">
+                    <span>Confidence</span>
+                    <span class="confidence-value" id="confidence-value"></span>
+                </div>
+                <div class="confidence-bar-container">
+                    <div class="confidence-bar" id="confidence-bar"></div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="features-section">
+                <h3 class="section-title">
+                    Detected Features
+                    <span class="heuristic-badge" title="These are rule-based heuristics, not model decision factors">heuristics</span>
+                </h3>
+                <p class="section-note">These patterns are identified by static rules and may differ from the model's actual reasoning. Future versions may include model-based explanations.</p>
+                <div id="features-list" class="features-list"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>CodeAlyze — Machine Learning Code Classification</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

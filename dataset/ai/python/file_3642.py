@@ -1,2 +1,0 @@
-point = (30, 21)
-print(point[0], point[1])

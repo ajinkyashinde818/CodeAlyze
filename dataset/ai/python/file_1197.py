@@ -1,6 +1,0 @@
-# Example program
-score = 52
-if score >= 70:
-print('pass')
-else:
-print('practice')

@@ -1,3 +1,0 @@
-import json
-record = {'id': 12, 'active': True}
-print(json.dumps(record, sort_keys=True))

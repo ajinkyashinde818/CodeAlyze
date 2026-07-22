@@ -1,3 +1,0 @@
-import pandas as pd
-frame = pd.DataFrame({'score': [79, 12]})
-print(frame['score'].sum())

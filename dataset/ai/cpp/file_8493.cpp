@@ -1,9 +1,0 @@
-#include <algorithm>
-#include <vector>
-#include <iostream>
-using namespace std;
-int main() {
-  vector<int> data{14, 13, 7};
-  sort(data.begin(), data.end());
-  cout << data.front() << '\n';
-}

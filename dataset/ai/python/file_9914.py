@@ -1,3 +1,0 @@
-balance = 4500
-balance += 24
-print(f'balance={balance}')
