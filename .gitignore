@@ -4,5 +4,3 @@ __pycache__/
 .ipynb_checkpoints/
 .env
 saved_models/
-backend/uploads/
-backend/analytics.db

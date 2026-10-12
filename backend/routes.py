@@ -2,14 +2,7 @@ import os
 import uuid
 from flask import Blueprint, request, jsonify, current_app
 
-from predictor import (
-    ModelUnavailableError,
-    dataset_status,
-    predict,
-    analyze_features,
-    model_status,
-    model_info,
-)
+from predictor import predict, analyze_features
 from utils import detect_language, detect_language_from_code, is_valid_code, record_analysis, get_analytics, export_analytics_csv, export_analytics_json
 
 api = Blueprint("api", __name__)
@@ -18,83 +11,11 @@ UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 ALLOWED_EXT = {".c", ".cpp", ".cc", ".cxx", ".h", ".hpp", ".java", ".py"}
-SUPPORTED_LANGUAGES = {"C", "C++", "Java", "Python"}
-DEFAULT_MAX_CODE_CHARS = 200_000
-
-
-def _max_code_chars() -> int:
-    return int(current_app.config.get("MAX_CODE_CHARS", DEFAULT_MAX_CODE_CHARS))
-
-
-def _validate_code_payload(code):
-    if not isinstance(code, str):
-        return "Code must be a string."
-    if not is_valid_code(code):
-        return "Empty or invalid code."
-    if len(code) > _max_code_chars():
-        return f"Code exceeds the {_max_code_chars()} character limit."
-    return None
-
-
-def _resolve_language(code: str, filename: str, language: str | None):
-    if language:
-        if language not in SUPPORTED_LANGUAGES:
-            return None, f"Unsupported language: {language}"
-        return language, None
-
-    detected = detect_language(filename)
-    if detected == "Unknown":
-        detected = detect_language_from_code(code)
-    if detected not in SUPPORTED_LANGUAGES:
-        return None, "Unable to determine a supported language. Select C, C++, Java, or Python."
-    return detected, None
-
-
-def _prediction_response(code: str, language: str, filename: str | None = None):
-    prediction = predict(code)
-    features = analyze_features(code)
-    record_analysis(language, prediction.label, prediction.confidence_score, len(code))
-
-    payload = {
-        "prediction": prediction.label,
-        "class_id": prediction.class_id,
-        "confidence": prediction.confidence_score,
-        "confidence_score": prediction.confidence_score,
-        "confidence_method": prediction.confidence_method,
-        "raw_score": prediction.raw_margin,
-        "raw_margin": prediction.raw_margin,
-        "language": language,
-        "model_version": prediction.model_version,
-        "warning": prediction.warning,
-        "features": features,
-        "note_heuristics": "Feature detections are rule-based heuristics and may not reflect actual model decision factors.",
-        "suggestion": "For model-based explanations, consider future updates with LIME or SHAP integration.",
-    }
-    if filename:
-        payload["filename"] = filename
-    return jsonify(payload)
 
 
 @api.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "ok", "service": "CodeAlyze API"}), 200
-
-
-@api.route("/ready", methods=["GET"])
-def ready():
-    status = model_status()
-    http_status = 200 if status["available"] else 503
-    return jsonify({"status": "ready" if status["available"] else "not_ready", "model": status}), http_status
-
-
-@api.route("/model-info", methods=["GET"])
-def model_info_endpoint():
-    return jsonify(model_info()), 200
-
-
-@api.route("/dataset-audit", methods=["GET"])
-def dataset_audit_endpoint():
-    return jsonify(dataset_status()), 200
 
 
 @api.route("/analyze", methods=["POST"])
@@ -104,21 +25,36 @@ def analyze():
         return jsonify({"error": "Missing 'code' field in JSON body"}), 400
 
     code = data["code"]
-    validation_error = _validate_code_payload(code)
-    if validation_error:
-        return jsonify({"error": validation_error}), 400
+    if not is_valid_code(code):
+        return jsonify({"error": "Empty or invalid code"}), 400
 
     filename = data.get("filename", "source.txt")
-    language, language_error = _resolve_language(code, filename, data.get("language"))
-    if language_error:
-        return jsonify({"error": language_error}), 400
+    language = data.get("language", None)
+    if language:
+        if language not in ("C", "C++", "Java", "Python"):
+            return jsonify({"error": f"Unsupported language: {language}"}), 400
+    else:
+        language = detect_language(filename)
+        if language == "Unknown":
+            language = detect_language_from_code(code)
 
     try:
-        return _prediction_response(code, language)
-    except ModelUnavailableError as e:
-        return jsonify({"error": "Model unavailable", "detail": str(e)}), 503
+        label, confidence, raw_score = predict(code)
+        features = analyze_features(code)
     except Exception as e:
         return jsonify({"error": f"Prediction failed: {str(e)}"}), 500
+
+    record_analysis(language, label, confidence, len(code))
+
+    return jsonify({
+        "prediction": label,
+        "confidence": confidence,
+        "raw_score": raw_score,
+        "language": language,
+        "features": features,
+        "note_heuristics": "Feature detections are rule-based heuristics and may not reflect actual model decision factors.",
+        "suggestion": "For model-based explanations, consider future updates with LIME or SHAP integration.",
+    })
 
 
 @api.route("/upload", methods=["POST"])
@@ -143,28 +79,32 @@ def upload():
             code = f.read()
     except Exception as e:
         return jsonify({"error": f"Failed to read file: {str(e)}"}), 500
-    finally:
-        # Uploaded files are only needed to read the code once. Remove the
-        # temporary copy so source files are not durably stored on disk.
-        try:
-            os.remove(filepath)
-        except OSError:
-            pass
 
-    validation_error = _validate_code_payload(code)
-    if validation_error:
-        return jsonify({"error": validation_error}), 400
+    if not is_valid_code(code):
+        return jsonify({"error": "File is empty or unreadable"}), 400
 
-    language, language_error = _resolve_language(code, file.filename, None)
-    if language_error:
-        return jsonify({"error": language_error}), 400
+    language = detect_language(file.filename)
+    if language == "Unknown":
+        language = detect_language_from_code(code)
 
     try:
-        return _prediction_response(code, language, filename=file.filename)
-    except ModelUnavailableError as e:
-        return jsonify({"error": "Model unavailable", "detail": str(e)}), 503
+        label, confidence, raw_score = predict(code)
+        features = analyze_features(code)
     except Exception as e:
         return jsonify({"error": f"Prediction failed: {str(e)}"}), 500
+
+    record_analysis(language, label, confidence, len(code))
+
+    return jsonify({
+        "filename": file.filename,
+        "prediction": label,
+        "confidence": confidence,
+        "raw_score": raw_score,
+        "language": language,
+        "features": features,
+        "note_heuristics": "Feature detections are rule-based heuristics and may not reflect actual model decision factors.",
+        "suggestion": "For model-based explanations, consider future updates with LIME or SHAP integration.",
+    })
 
 
 @api.route("/admin/stats", methods=["GET"])

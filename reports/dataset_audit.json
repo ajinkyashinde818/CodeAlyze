@@ -1,6 +1,0 @@
-{
-  "dataset_root": "dataset",
-  "available": false,
-  "error": "Dataset root does not exist.",
-  "total_files": 0
-}
