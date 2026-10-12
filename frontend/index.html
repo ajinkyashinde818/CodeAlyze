@@ -1,120 +1,353 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeAlyze — AI vs Human Code Detector</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CodeAlyze - AI Code Detector</title>
+
+    <a href="#" class="brand">
+    <img src="/assets/logo.png" alt="CodeAlyze" class="site-logo">
+    <span>CodeAlyze - AI Code Detector</span>
+    </a>
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
 </head>
+
 <body>
-    <nav class="navbar">
-        <div class="nav-brand">
-            <svg class="nav-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>
-            </svg>
-            <span>CodeAlyze</span>
-        </div>
-        <div class="nav-links">
-            <a href="/" class="active">Analyze</a>
-            <a href="/admin">Dashboard</a>
-        </div>
-    </nav>
 
-    <main class="container">
-        <header class="hero">
-            <h1>Detect AI-Generated Code</h1>
-            <p>Paste source code or upload a file to determine if it was written by a human or AI.</p>
-        </header>
+    <nav class="navbar" aria-label="Primary navigation">
 
-        <div class="card input-card">
-            <div class="tabs">
-                <button class="tab active" data-tab="paste">Paste Code</button>
-                <button class="tab" data-tab="upload">Upload File</button>
+        <a href="#top" class="nav-brand" aria-label="CodeAlyze home">
+
+            <span class="brand-mark" aria-hidden="true"><img src="assets/logo.png" alt=""></span>
+
+            <span>CodeAlyze</span>
+
+        </a>
+
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+
+            <span></span>
+
+            <span></span>
+
+            <span></span>
+
+        </button>
+
+        <div class="nav-links" id="nav-links">
+                <a href="#analyzer">Analyze Code</a>
             </div>
 
-            <div class="tab-content active" id="tab-paste">
-                <div class="language-selector">
-                    <label for="lang-select">Language:</label>
-                    <select id="lang-select">
-                        <option value="auto">Auto-detect</option>
-                        <option value="C">C</option>
-                        <option value="C++">C++</option>
-                        <option value="Java">Java</option>
-                        <option value="Python">Python</option>
-                    </select>
-                </div>
-                <textarea id="code-input" class="code-editor" placeholder="Paste your source code here..." spellcheck="false"></textarea>
-                <div class="input-footer">
-                    <span id="line-count" class="line-count">0 lines</span>
-                    <span id="char-count" class="char-count">0 chars</span>
-                </div>
-            </div>
+    </nav>
 
-            <div class="tab-content" id="tab-upload">
-                <div class="drop-zone" id="drop-zone">
-                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
-                    </svg>
-                    <p class="drop-text">Drag & drop a source file here</p>
-                    <p class="drop-subtext">or click to browse</p>
-                    <input type="file" id="file-input" accept=".c,.cpp,.cc,.cxx,.h,.hpp,.java,.py" hidden>
-                    <span id="file-name" class="file-name"></span>
-                </div>
-                <div class="supported-formats">
-                    Supported: .c .cpp .cc .cxx .h .hpp .java .py
-                </div>
-            </div>
+    <main id="top">
 
-            <button id="analyze-btn" class="btn btn-primary" disabled>
-                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-                </svg>
-                Analyze
-            </button>
-        </div>
+        <section class="hero-section">
 
-        <div id="loading" class="loading" hidden>
-            <div class="spinner"></div>
-            <p>Analyzing code...</p>
-        </div>
+            <div class="hero-copy">
 
-        <div id="result" class="result-card" hidden>
-            <div class="result-header">
-                <div class="result-badge" id="result-badge">
-                    <span class="badge-icon" id="badge-icon"></span>
-                    <span id="result-label"></span>
-                </div>
-                <span class="result-language" id="result-language"></span>
-            </div>
+                <p class="eyebrow">AI code detector for academic demonstration</p>
 
-            <div class="confidence-section">
-                <div class="confidence-label">
-                    <span>Confidence</span>
-                    <span class="confidence-value" id="confidence-value"></span>
-                </div>
-                <div class="confidence-bar-container">
-                    <div class="confidence-bar" id="confidence-bar"></div>
-                </div>
-            </div>
+                <h1>Estimate whether source code looks AI-generated or human-written.</h1>
 
-            <div class="divider"></div>
+                <p class="hero-lede">
+
+                    CodeAlyze uses a real machine-learning pipeline to analyze C, C++, Java, and Python code. It is built for clear demonstration, honest limitations, and reliable local use.
+
+                </p>
+
+                <div class="hero-actions">
+
+                    <a class="btn btn-primary" href="#analyzer">Analyze Code</a>
+
+                    <a class="btn btn-secondary" href="#analyzer">View Model Info</a>
+
+                </div>
+
+                <p class="disclaimer">
+
+                    Predictions are estimates from training-data patterns. They are not proof of authorship.
+
+                </p>
+
+            </div>
+
+            <div class="hero-visual" aria-label="Illustrative CodeAlyze preview">
+
+                <div class="preview-window">
+
+                    <div class="preview-titlebar">
+
+                        <span></span>
+
+                        <span></span>
+
+                        <span></span>
+
+                        <strong>analysis_preview.py</strong>
+
+                    </div>
+
+                    <pre><code><span class="code-muted"># Illustrative sample input</span>
+
+def binary_search(values, target):
+
+    low, high = 0, len(values) - 1
+
+    while low &lt;= high:
+
+        mid = (low + high) // 2
+
+        if values[mid] == target:
+
+            return mid
+
+        if values[mid] &lt; target:
+
+            low = mid + 1
+
+        else:
+
+            high = mid - 1
+
+    return -1</code></pre>
+
+                    <div class="preview-result">
+
+                        <span class="status-dot"></span>
+
+                        <span>Real API result appears after analysis</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+<section class="section analyzer-section" id="analyzer">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">Main analyzer</p>
+
+                <h2>Run a genuine backend prediction</h2>
+
+                <p>Paste code, load a labeled sample, or upload a source file. The app sends your code to the Flask API and displays the model response.</p>
+
+            </div>
+
+            <div class="analyzer-layout">
+
+                <div class="panel input-panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <h3>Source input</h3>
+
+                            <p>Select a language or let the backend infer it from code patterns.</p>
+
+                        </div>
+
+                        <span class="pill" id="api-status">Checking API</span>
+
+                    </div>
+
+                    <div class="tabs" role="tablist" aria-label="Input mode">
+
+                        <button class="tab active" data-tab="paste" role="tab" aria-selected="true">Paste Code</button>
+
+                        <button class="tab" data-tab="upload" role="tab" aria-selected="false">Upload File</button>
+
+                    </div>
+
+                    <div class="tab-content active" id="tab-paste" role="tabpanel">
+
+                        <div class="toolbar">
+
+                            <label class="field-label" for="lang-select">Language</label>
+
+                            <select id="lang-select">
+
+                                <option value="auto">Auto-detect</option>
+
+                                <option value="C">C</option>
+
+                                <option value="C++">C++</option>
+
+                                <option value="Java">Java</option>
+
+                                <option value="Python">Python</option>
+
+                            </select>
+
+                            <div class="sample-controls" aria-label="Load sample code">
+
+                                <button class="chip" data-sample="python" type="button">Python sample</button>
+
+                                <button class="chip" data-sample="java" type="button">Java sample</button>
+
+                                <button class="chip" data-sample="cpp" type="button">C++ sample</button>
+
+                                <button class="chip" data-sample="c" type="button">C sample</button>
+
+                            </div>
+
+                        </div>
+
+                        <div class="editor-shell">
+
+                            <div class="editor-gutter" aria-hidden="true" id="line-gutter">1</div>
+
+                            <textarea id="code-input" class="code-editor" placeholder="Paste source code here..." spellcheck="false" aria-label="Source code input"></textarea>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tab-content" id="tab-upload" role="tabpanel">
+
+                        <div class="drop-zone" id="drop-zone" tabindex="0" role="button" aria-label="Upload source file">
+
+                            <div class="upload-symbol" aria-hidden="true">UP</div>
+
+                            <p class="drop-text">Drop a source file here</p>
+
+                            <p class="drop-subtext">or click to browse</p>
+
+                            <input type="file" id="file-input" accept=".c,.cpp,.cc,.cxx,.h,.hpp,.java,.py" hidden>
+
+                            <span id="file-name" class="file-name"></span>
+
+                        </div>
+
+                        <p class="supported-formats">Supported extensions: .c .cpp .cc .cxx .h .hpp .java .py</p>
+
+                    </div>
+
+                    <div class="input-footer">
+
+                        <span id="line-count">0 lines</span>
+
+                        <span id="char-count">0 / 200000 chars</span>
+
+                    </div>
+
+                    <div class="action-row">
+
+                        <button id="clear-btn" class="btn btn-secondary" type="button">Clear</button>
+
+                        <button id="analyze-btn" class="btn btn-primary" type="button" disabled>Analyze Code</button>
+
+                    </div>
+
+                </div>
+
+                <aside class="panel result-panel" aria-live="polite">
+
+                    <div id="empty-state" class="empty-state">
+
+                        <span class="empty-icon" aria-hidden="true">ML</span>
+
+                        <h3>Ready for analysis</h3>
+
+                        <p>Load a sample or paste your own code. Results shown here will come from the backend model response.</p>
+
+                    </div>
+
+                    <div id="loading" class="loading" hidden>
+
+                        <div class="spinner"></div>
+
+                        <p>Sending code to the model...</p>
+
+                    </div>
+
+                    <div id="error" class="error-card" hidden></div>
+
+                    <div id="result" class="result-card" hidden>
+
+                        <div class="result-header">
+
+                            <div class="result-badge" id="result-badge">
+
+                                <span class="badge-icon" id="badge-icon" aria-hidden="true"></span>
+
+                                <span id="result-label"></span>
+
+                            </div>
+
+                            <span class="result-language" id="result-language"></span>
+
+                        </div>
+
+                        <p class="interpretation" id="result-interpretation"></p>
+
+                        <div class="score-box">
+
+                            <div class="confidence-label">
+
+                                <span>Model score</span>
+
+                                <span class="confidence-value" id="confidence-value"></span>
+
+                            </div>
+
+                            <div class="confidence-bar-container">
+
+                                <div class="confidence-bar" id="confidence-bar"></div>
+
+                            </div>
+
+                            <p class="section-note" id="model-meta"></p>
+
+                            <p class="section-note" id="result-warning">This prediction is an estimate, not proof of authorship.</p>
+
+                        </div>
+
+                        <div class="result-actions">
+
+                            <button id="copy-result-btn" class="btn btn-secondary" type="button">Copy Result</button>
+
+                            <button id="clear-result-btn" class="btn btn-ghost" type="button">Clear Result</button>
+
+                        </div>
 
             <div class="features-section">
                 <h3 class="section-title">
                     Detected Features
                     <span class="heuristic-badge" title="These are rule-based heuristics, not model decision factors">heuristics</span>
                 </h3>
+                <p class="section-note">These patterns are identified by static rules and may differ from the model's actual reasoning. Future versions may include model-based explanations.</p>
                 <div id="features-list" class="features-list"></div>
             </div>
         </div>
     </main>
 
-    <footer class="footer">
-        <p>CodeAlyze — Machine Learning Code Classification</p>
-    </footer>
+    <footer class="footer"><p>© CodeAlyze · Code pattern analysis</p></footer>
 
-    <script src="script.js"></script>
+    <script src="script.js"></script>
+
 </body>
-</html>
 
+</html>

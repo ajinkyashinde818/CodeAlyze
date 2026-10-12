@@ -3,393 +3,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeAlyze — Admin Dashboard</title>
+    <title>CodeAlyze — Local Usage Dashboard</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-
-        .stat-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 4px;
-        }
-
-        .stat-label {
-            font-size: 13px;
-            color: var(--text2);
-        }
-
-        .stat-value.ai { color: var(--ai); }
-        .stat-value.human { color: var(--human); }
-        .stat-value.total { color: var(--primary); }
-        .stat-value.pct { color: var(--accent); }
-
-        .section-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 16px;
-        }
-
-        .section-card h2 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--text);
-        }
-
-        .bar-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 0;
-        }
-
-        .bar-label {
-            width: 80px;
-            font-size: 14px;
-            font-weight: 500;
-            flex-shrink: 0;
-        }
-
-        .bar-track {
-            flex: 1;
-            height: 24px;
-            background: var(--surface2);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .bar-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.6s ease;
-            display: flex;
-            align-items: center;
-            padding-left: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            color: white;
-            min-width: fit-content;
-        }
-
-        .bar-fill.ai-fill { background: linear-gradient(90deg, var(--ai), #ff8787); }
-        .bar-fill.human-fill { background: linear-gradient(90deg, var(--human), #69db7c); }
-        .bar-fill.lang-fill { background: linear-gradient(90deg, var(--primary), var(--accent)); }
-
-        .bar-value {
-            width: 50px;
-            text-align: right;
-            font-size: 13px;
-            color: var(--text2);
-        }
-
-        .daily-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .daily-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 6px 0;
-            font-size: 13px;
-        }
-
-        .daily-date {
-            width: 100px;
-            color: var(--text2);
-        }
-
-        .daily-bar {
-            flex: 1;
-            height: 16px;
-            background: var(--surface2);
-            border-radius: 3px;
-            overflow: hidden;
-            display: flex;
-        }
-
-        .daily-ai {
-            height: 100%;
-            background: var(--ai);
-        }
-
-        .daily-human {
-            height: 100%;
-            background: var(--human);
-        }
-
-        .daily-total {
-            width: 40px;
-            text-align: right;
-            font-weight: 600;
-        }
-
-        .refresh-btn {
-            padding: 8px 20px;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text);
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 16px;
-        }
-
-        .refresh-btn:hover {
-            background: var(--border);
-        }
-
-        .admin-toolbar {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .export-group {
-            display: flex;
-            gap: 8px;
-        }
-
-        .export-btn {
-            padding: 8px 16px;
-            background: var(--primary);
-            border: none;
-            border-radius: var(--radius-sm);
-            color: white;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .export-btn:hover {
-            background: var(--primary-dim);
-            transform: translateY(-1px);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text2);
-        }
-
-        .empty-state svg {
-            width: 48px;
-            height: 48px;
-            opacity: 0.5;
-            margin-bottom: 12px;
-        }
-
-        .empty-state p {
-            font-size: 14px;
+        .dashboard-page {
+            min-height: 100vh;
+            padding-bottom: 20px;
+            background: linear-gradient(180deg, #08111f 0%, #0a1322 96px, #f8fafc 96px, #eef4fb 100%);
         }
     </style>
 </head>
-<body>
-    <nav class="navbar">
-        <div class="nav-brand">
-            <svg class="nav-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>
-            </svg>
+<body class="dashboard-page">
+    <nav class="navbar" aria-label="Primary navigation">
+        <a href="/" class="nav-brand" aria-label="CodeAlyze home">
+            <span class="brand-mark" aria-hidden="true">&lt;/&gt;</span>
             <span>CodeAlyze</span>
-        </div>
-        <div class="nav-links">
+        </a>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="/">Analyze</a>
-            <a href="/admin" class="active">Dashboard</a>
+            <a href="/#model">Model</a>
+            <a href="/#tech">Tech</a>
+            <a href="/admin">Dashboard</a>
         </div>
     </nav>
 
-    <main class="container">
-        <header class="hero">
-            <h1>Admin Dashboard</h1>
-            <p>Real-time analytics for all code analyses.</p>
+    <main class="section" style="padding-top:38px">
+        <header class="admin-hero">
+            <div>
+                <p class="eyebrow">Local usage dashboard</p>
+                <h1>Analyses recorded on this machine</h1>
+                <p>These counters come only from analyses submitted to this local instance and stored in <code>backend/analytics.db</code>. They are usage counts, not model accuracy or model-quality metrics.</p>
+            </div>
+            <span class="pill" id="api-status">Checking API</span>
         </header>
 
         <div class="admin-toolbar">
-            <button class="refresh-btn" onclick="loadStats()">⟳ Refresh</button>
-            <div class="export-group">
-                <button class="export-btn" onclick="exportReport('csv')">⬇ Export CSV</button>
-                <button class="export-btn" onclick="exportReport('json')">⬇ Export JSON</button>
-            </div>
+            <button class="btn btn-secondary" id="refresh-btn" type="button">Refresh</button>
+            <button class="btn btn-ghost" id="export-csv-btn" type="button">Export CSV</button>
+            <button class="btn btn-ghost" id="export-json-btn" type="button">Export JSON</button>
         </div>
 
-        <div id="stats-container">
-            <div class="empty-state">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                </svg>
-                <p>Loading analytics data...</p>
+        <div id="stats-container" aria-live="polite">
+            <div class="admin-empty">
+                <strong>Loading analytics</strong>
+                <p>Reading recorded analyses from the backend.</p>
             </div>
         </div>
     </main>
 
+    <footer class="footer">
+        <p>CodeAlyze — local demonstration dashboard. Usage counters only; no model accuracy is implied.</p>
+    </footer>
+
     <script>
-        const API_BASE_URL = "https://codealyze.onrender.com";
+        const API_BASE_URL = window.CODEALYZE_API_BASE_URL || "";
+        const CONFIDENCE_BUCKETS = ["50-60%", "60-70%", "70-80%", "80-90%", "90-100%"];
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function percentage(part, total) {
+            return total > 0 ? ((part / total) * 100).toFixed(1) : "0.0";
+        }
+
+        function renderEmpty(container, title, message) {
+            container.innerHTML = `
+                <div class="admin-empty">
+                    <strong>${escapeHtml(title)}</strong>
+                    <p>${escapeHtml(message)}</p>
+                </div>`;
+        }
+
+        function statCard(value, label, modifier = "") {
+            return `<div class="stat-card">
+                <div class="stat-value ${modifier}">${value}</div>
+                <div class="stat-label">${escapeHtml(label)}</div>
+            </div>`;
+        }
+
+        function barRow(label, count, share, fillClass) {
+            return `<div class="bar-item">
+                <span class="bar-label">${escapeHtml(label)}</span>
+                <div class="bar-track">
+                    <div class="bar-fill ${fillClass}" style="width: ${share}%">${count}</div>
+                </div>
+                <span class="bar-value">${share}%</span>
+            </div>`;
+        }
 
         async function loadStats() {
             const container = document.getElementById("stats-container");
-            container.innerHTML = `<div class="empty-state"><p>Loading...</p></div>`;
+            renderEmpty(container, "Loading analytics", "Reading recorded analyses from the backend.");
 
+            let data;
             try {
-                const resp = await fetch(`${API_BASE_URL}/api/admin/stats`);
-                if (!resp.ok) throw new Error("Failed to load");
-                const data = await resp.json();
+                const response = await fetch(`${API_BASE_URL}/api/admin/stats`);
+                if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
+                data = await response.json();
+            } catch (error) {
+                renderEmpty(
+                    container,
+                    "Could not load analytics",
+                    `The backend is unreachable or returned an error. ${error.message}`,
+                );
+                return;
+            }
 
-                let html = "";
+            if (!data.total_analyses) {
+                renderEmpty(
+                    container,
+                    "No analyses recorded yet",
+                    "Run a prediction from the analyzer and this dashboard will populate from real stored data.",
+                );
+                return;
+            }
 
-                if (data.total_analyses === 0) {
-                    html = `<div class="empty-state"><p>No analyses recorded yet. Run some predictions first!</p></div>`;
-                    container.innerHTML = html;
+            const total = data.total_analyses;
+            const langEntries = Object.entries(data.language_distribution || {});
+            const langTotal = langEntries.reduce((sum, [, count]) => sum + count, 0);
+            const confEntries = CONFIDENCE_BUCKETS.map(
+                (bucket) => [bucket, (data.confidence_distribution || {})[bucket] || 0],
+            );
+            const confTotal = confEntries.reduce((sum, [, count]) => sum + count, 0);
+            const daily = data.daily_stats || [];
+            const maxDaily = daily.length ? Math.max(...daily.map((day) => day.total), 1) : 1;
+
+            let html = `<div class="stat-grid">`;
+            html += statCard(total, "Analyses recorded", "total");
+            html += statCard(data.ai_count, "Predicted AI-like", "ai");
+            html += statCard(data.human_count, "Predicted human-like", "human");
+            html += statCard(`${data.ai_percentage}%`, "Share predicted AI-like");
+            html += `</div>`;
+
+            html += `<section class="admin-card">
+                <h2>Language distribution</h2>
+                <p class="info-note section-note">Counts of submitted analyses by selected language.</p>
+                ${langEntries
+                    .map(([language, count]) => barRow(language, count, percentage(count, langTotal), "lang-fill"))
+                    .join("")}
+            </section>`;
+
+            html += `<section class="admin-card">
+                <h2>Predicted class split</h2>
+                <p class="info-note section-note">Share of recorded predictions per class. This is usage data, not accuracy.</p>
+                ${barRow("AI-like", data.ai_count, data.ai_percentage, "ai-fill")}
+                ${barRow("Human-like", data.human_count, data.human_percentage, "human-fill")}
+            </section>`;
+
+            html += `<section class="admin-card">
+                <h2>Model score distribution</h2>
+                <p class="info-note section-note">
+                    Buckets of the uncalibrated margin-derived display score. These are not calibrated probabilities.
+                </p>
+                ${confEntries
+                    .map(([bucket, count]) => barRow(bucket, count, percentage(count, confTotal), "lang-fill"))
+                    .join("")}
+            </section>`;
+
+            if (daily.length) {
+                html += `<section class="admin-card">
+                    <h2>Daily activity</h2>
+                    <p class="info-note section-note">Recorded analyses per day.</p>
+                    <div class="daily-list">
+                        ${daily
+                            .map(
+                                (day) => `<div class="daily-item">
+                                    <span class="daily-date">${escapeHtml(day.date)}</span>
+                                    <div class="daily-bar">
+                                        <div class="daily-ai" style="width: ${percentage(day.ai, maxDaily)}%" title="AI-like: ${day.ai}"></div>
+                                        <div class="daily-human" style="width: ${percentage(day.human, maxDaily)}%" title="Human-like: ${day.human}"></div>
+                                    </div>
+                                    <span class="daily-total">${day.total}</span>
+                                </div>`,
+                            )
+                            .join("")}
+                    </div>
+                </section>`;
+            }
+
+            html += `<section class="admin-card">
+                <h2>Recent analyses</h2>
+                <p class="info-note section-note">Metadata only. Submitted source code is not stored.</p>
+                <div class="admin-table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Time</th>
+                                <th scope="col">Language</th>
+                                <th scope="col">Prediction</th>
+                                <th scope="col">Model score</th>
+                                <th scope="col">Code length</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-body">
+                            <tr><td colspan="5">Loading recent rows...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>`;
+
+            container.innerHTML = html;
+            loadRecentRows();
+        }
+
+        async function loadRecentRows() {
+            const body = document.getElementById("recent-body");
+            if (!body) return;
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/stats/export?format=json`);
+                if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
+                const rows = await response.json();
+                if (!rows.length) {
+                    body.innerHTML = '<tr><td colspan="5">No rows found.</td></tr>';
                     return;
                 }
-
-                // Stat cards
-                html += `<div class="dashboard-grid">
-                    <div class="stat-card">
-                        <div class="stat-value total">${data.total_analyses}</div>
-                        <div class="stat-label">Total Analyses</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value ai">${data.ai_count}</div>
-                        <div class="stat-label">AI Generated</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value human">${data.human_count}</div>
-                        <div class="stat-label">Human Written</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value pct">${data.ai_percentage}%</div>
-                        <div class="stat-label">AI Percentage</div>
-                    </div>
-                </div>`;
-
-                // Language distribution
-                html += `<div class="section-card"><h2>Language Distribution</h2>`;
-                const langTotal = Object.values(data.language_distribution).reduce((a, b) => a + b, 0);
-                for (const [lang, count] of Object.entries(data.language_distribution)) {
-                    const pct = (count / langTotal * 100).toFixed(1);
-                    html += `<div class="bar-item">
-                        <span class="bar-label">${lang}</span>
-                        <div class="bar-track">
-                            <div class="bar-fill lang-fill" style="width: ${pct}%">${count}</div>
-                        </div>
-                        <span class="bar-value">${pct}%</span>
-                    </div>`;
-                }
-                html += `</div>`;
-
-                // AI vs Human
-                html += `<div class="section-card"><h2>AI vs Human</h2>`;
-                const aiPct = data.ai_percentage;
-                const humanPct = data.human_percentage;
-                html += `<div class="bar-item">
-                    <span class="bar-label">AI</span>
-                    <div class="bar-track">
-                        <div class="bar-fill ai-fill" style="width: ${aiPct}%">${data.ai_count}</div>
-                    </div>
-                    <span class="bar-value">${aiPct}%</span>
-                </div>
-                <div class="bar-item">
-                    <span class="bar-label">Human</span>
-                    <div class="bar-track">
-                        <div class="bar-fill human-fill" style="width: ${humanPct}%">${data.human_count}</div>
-                    </div>
-                    <span class="bar-value">${humanPct}%</span>
-                </div>`;
-                html += `</div>`;
-
-                // Confidence distribution
-                html += `<div class="section-card"><h2>Confidence Distribution</h2>`;
-                const confTotal = Object.values(data.confidence_distribution).reduce((a, b) => a + b, 0);
-                const confOrder = ["50-60%", "60-70%", "70-80%", "80-90%", "90-100%"];
-                for (const bucket of confOrder) {
-                    const count = data.confidence_distribution[bucket] || 0;
-                    const pct = (count / confTotal * 100).toFixed(1);
-                    html += `<div class="bar-item">
-                        <span class="bar-label">${bucket}</span>
-                        <div class="bar-track">
-                            <div class="bar-fill lang-fill" style="width: ${pct}%">${count}</div>
-                        </div>
-                        <span class="bar-value">${pct}%</span>
-                    </div>`;
-                }
-                html += `</div>`;
-
-                // Daily stats
-                if (data.daily_stats && data.daily_stats.length > 0) {
-                    html += `<div class="section-card"><h2>Daily Activity (Last 30 Days)</h2><div class="daily-list">`;
-                    const maxDaily = Math.max(...data.daily_stats.map(d => d.total), 1);
-                    for (const day of data.daily_stats) {
-                        const aiW = (day.ai / maxDaily * 100).toFixed(1);
-                        const humanW = (day.human / maxDaily * 100).toFixed(1);
-                        html += `<div class="daily-item">
-                            <span class="daily-date">${day.date}</span>
-                            <div class="daily-bar">
-                                <div class="daily-ai" style="width: ${aiW}%" title="AI: ${day.ai}"></div>
-                                <div class="daily-human" style="width: ${humanW}%" title="Human: ${day.human}"></div>
-                            </div>
-                            <span class="daily-total">${day.total}</span>
-                        </div>`;
-                    }
-                    html += `</div></div>`;
-                }
-
-                container.innerHTML = html;
-            } catch (err) {
-                container.innerHTML = `<div class="empty-state"><p>Error loading analytics: ${err.message}</p></div>`;
+                body.innerHTML = rows
+                    .slice(0, 20)
+                    .map(
+                        (row) => `<tr>
+                            <td>${escapeHtml(row.timestamp)}</td>
+                            <td>${escapeHtml(row.language)}</td>
+                            <td>${escapeHtml(row.prediction)}</td>
+                            <td>${escapeHtml(row.confidence)}%</td>
+                            <td>${escapeHtml(row.code_length)}</td>
+                        </tr>`,
+                    )
+                    .join("");
+            } catch (error) {
+                body.innerHTML = `<tr><td colspan="5">Could not load recent rows: ${escapeHtml(error.message)}</td></tr>`;
             }
         }
 
         async function exportReport(format) {
             try {
-                const url = `${API_BASE_URL}/api/admin/stats/export?format=${format}`;
-                if (format === 'json') {
-                    const resp = await fetch(url);
-                    if (!resp.ok) throw new Error('Export failed');
-                    const data = await resp.json();
-                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = 'codealyze_analytics_export.json';
-                    a.click();
-                    URL.revokeObjectURL(a.href);
-                } else {
-                    const resp = await fetch(url);
-                    if (!resp.ok) throw new Error('Export failed');
-                    const csv = await resp.text();
-                    const blob = new Blob([csv], { type: 'text/csv' });
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = 'codealyze_analytics_export.csv';
-                    a.click();
-                    URL.revokeObjectURL(a.href);
-                }
-            } catch (err) {
-                alert(`Export error: ${err.message}`);
+                const response = await fetch(
+                    `${API_BASE_URL}/api/admin/stats/export?format=${encodeURIComponent(format)}`,
+                );
+                if (!response.ok) throw new Error(`Export failed with status ${response.status}`);
+
+                const isJson = format === "json";
+                const contents = isJson ? JSON.stringify(await response.json(), null, 2) : await response.text();
+                const blob = new Blob([contents], { type: isJson ? "application/json" : "text/csv" });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = `codealyze_analytics_export.${format}`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                alert(`Export error: ${error.message}`);
             }
         }
 
+        async function checkApiStatus() {
+            const statusEl = document.getElementById("api-status");
+            if (!statusEl) return;
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/ready`);
+                const data = await response.json();
+                if (response.ok && data.model && data.model.available) {
+                    statusEl.textContent = "Model online";
+                    statusEl.className = "pill ok";
+                } else {
+                    statusEl.textContent = "Model unavailable";
+                    statusEl.className = "pill warn";
+                }
+            } catch {
+                statusEl.textContent = "API unreachable";
+                statusEl.className = "pill warn";
+            }
+        }
+
+        document.getElementById("refresh-btn").addEventListener("click", loadStats);
+        document.getElementById("export-csv-btn").addEventListener("click", () => exportReport("csv"));
+        document.getElementById("export-json-btn").addEventListener("click", () => exportReport("json"));
+
+        const navToggle = document.getElementById("nav-toggle");
+        const navLinks = document.getElementById("nav-links");
+        navToggle.addEventListener("click", () => {
+            const isOpen = navLinks.classList.toggle("open");
+            navToggle.setAttribute("aria-expanded", String(isOpen));
+        });
+        navLinks.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                navLinks.classList.remove("open");
+                navToggle.setAttribute("aria-expanded", "false");
+            });
+        });
+
+        checkApiStatus();
         loadStats();
     </script>
 </body>
